@@ -22,24 +22,24 @@
 	<string>com.github.autopkg.pkg.Silverlight</string>
 	<key>Process</key>
 	<array>
-	<dict>
-		<key>Arguments</key>
 		<dict>
-			<key>version</key>
-			<string>%version%</string>
-			<key>prod_name</key>
-			<string>%NAME%</string>
-			<key>category</key>
-			<string>%CATEGORY%</string>
-			<key>smart_group</key>
-			<string>%SMART_GROUP%</string>
-			<key>selfserve_policy</key>
-			<string>%SELFSERVE_POLICY%</string>
-			<!--<key>arb_group_name</key><string>%ARB_GROUP_NAME%</string>-->
+			<key>Arguments</key>
+			<dict>
+				<key>version</key>
+				<string>%version%</string>
+				<key>prod_name</key>
+				<string>%NAME%</string>
+				<key>category</key>
+				<string>%CATEGORY%</string>
+				<key>smart_group</key>
+				<string>%SMART_GROUP%</string>
+				<key>selfserve_policy</key>
+				<string>%SELFSERVE_POLICY%</string>
+				<!--<key>arb_group_name</key><string>%ARB_GROUP_NAME%</string>-->
+			</dict>
+			<key>Processor</key>
+			<string>JSSImporter</string>
 		</dict>
-		<key>Processor</key>
-		<string>JSSImporter</string>
-	</dict>
 	</array>
 </dict>
 </plist>
