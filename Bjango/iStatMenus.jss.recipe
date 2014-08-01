@@ -8,6 +8,8 @@
 	<string>com.justinrummel.jss.iStatMenus</string>
 	<key>Input</key>
 	<dict>
+		<key>NAME</key>
+		<string>iStat Menus</string>
 		<key>CATEGORY</key>
 		<string>%NAME%</string>
 		<key>SMART_GROUP</key>
