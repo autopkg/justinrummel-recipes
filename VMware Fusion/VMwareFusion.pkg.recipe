@@ -27,7 +27,7 @@
 				<key>destination_path</key>
 				<string>%RECIPE_CACHE_DIR%/tar</string>
 				<key>purge_destination</key>
-				<false/>
+				<true/>
 				<key>archive_format</key>
 				<string>tar</string>
 			</dict>
@@ -42,7 +42,7 @@
 				<key>destination_path</key>
 				<string>%RECIPE_CACHE_DIR%/source</string>
 				<key>purge_destination</key>
-				<false/>
+				<true/>
 				<key>archive_format</key>
 				<string>zip</string>
 			</dict>
