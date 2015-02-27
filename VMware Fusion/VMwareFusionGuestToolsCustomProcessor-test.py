@@ -73,12 +73,13 @@ def packages_metadata(base_url, fusion):
     data = f.read()
     # print data
 
+    print base_url+packages[0].replace("metadata.xml.gz", "")
+
     try:
         metadataResponse = ElementTree.fromstring(data)
     except ExpatData:
         print "Unable to parse XML data from string"
 
-    # relativePath = metadataResponse.find("bulletin/componentList/component/relativePath")
     for elem in metadataResponse.findall('bulletin/componentList/component/relativePath'):
         # print elem.text
         # print packages[0].replace("metadata.xml.gz", elem.text)

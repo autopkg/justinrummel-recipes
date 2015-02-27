@@ -26,6 +26,7 @@ __all__ = ["VMwareFusionGuestToolsURLProvider"]
 # variables
 VMWARE_BASE_URL = 'https://softwareupdate.vmware.com/cds/vmw-desktop/'
 FUSION = 'fusion.xml'
+DEFAULT_TOOL = 'com.vmware.fusion.tools.darwin.zip.tar'
 
 class VMwareFusionGuestToolsURLProvider(Processor):
     description = "Provides URL to the latest VMware Fusion update release."
@@ -34,6 +35,10 @@ class VMwareFusionGuestToolsURLProvider(Processor):
             "required": False,
             "description":
                 "Default is '%s." % FUSION,
+        },
+        "guest_tool": {
+            "required": True,
+            "description": "Default is %s." % DEFAULT_TOOL,
         },
         "base_url": {
             "required": False,
@@ -102,10 +107,12 @@ class VMwareFusionGuestToolsURLProvider(Processor):
         except ExpatData:
             print "Unable to parse XML data from string"
 
+        return base_url+packages[0].replace("metadata.xml.gz", "")+guest_tool
+
         # relativePath = metadataResponse.find("bulletin/componentList/component/relativePath")
-        for elem in metadataResponse.findall('bulletin/componentList/component/relativePath'):
+        #for elem in metadataResponse.findall('bulletin/componentList/component/relativePath'):
             # print elem.text
-            return base_url+packages[0].replace("metadata.xml.gz", elem.text)
+        #    return base_url+packages[0].replace("metadata.xml.gz", elem.text)
 
     def main(self):
         # Determine product_name, and base_url.

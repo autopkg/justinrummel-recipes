@@ -22,6 +22,15 @@
 			<dict>
 				<key>product_name</key>
 				<string>fusion.xml</string>
+				<key>guest_tool</key>
+<!-- Pick One per Guest Tool Download -->
+				<string>com.vmware.fusion.tools.darwin.zip.tar</string>
+<!-- 				<string>com.vmware.fusion.tools.freebsd.zip.tar</string> -->
+<!-- 				<string>com.vmware.fusion.tools.linux.zip.tar</string> -->
+<!-- 				<string>com.vmware.fusion.tools.netware.zip.tar</string> -->
+<!-- 				<string>com.vmware.fusion.tools.solaris.zip.tar</string> -->
+<!-- 				<string>com.vmware.fusion.tools.windows.zip.tar</string> -->
+<!-- 				<string>com.vmware.fusion.tools.winPre2k.zip.tar</string> -->
 			</dict>
 		</dict>
 		<dict>
