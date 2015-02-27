@@ -24,7 +24,7 @@ base_url = 'https://softwareupdate.vmware.com/cds/vmw-desktop/'
 fusion = 'fusion.xml'
 
 # functions
-def core_metadata(base_url, fusion):
+def packages_metadata(base_url, fusion):
     request = urllib2.Request(base_url+fusion)
     print base_url
 
@@ -56,12 +56,12 @@ def core_metadata(base_url, fusion):
         urls.append(url.text)
 
     matching = [s for s in urls if latest in s]
-    core = [s for s in matching if "core" in s]
-    print core[0]
+    packages = [s for s in matching if "package" in s]
+    print packages[0]
 
     vsus.close()
 
-    request = urllib2.Request(base_url+core[0])
+    request = urllib2.Request(base_url+packages[0])
 
     try:
         vLatest = urllib2.urlopen(request)
@@ -78,8 +78,10 @@ def core_metadata(base_url, fusion):
     except ExpatData:
         print "Unable to parse XML data from string"
 
-    relativePath = metadataResponse.find("bulletin/componentList/component/relativePath")
-    print core[0].replace("metadata.xml.gz", relativePath.text)
-    print base_url+core[0].replace("metadata.xml.gz", relativePath.text)
+    # relativePath = metadataResponse.find("bulletin/componentList/component/relativePath")
+    for elem in metadataResponse.findall('bulletin/componentList/component/relativePath'):
+        # print elem.text
+        # print packages[0].replace("metadata.xml.gz", elem.text)
+        print base_url+packages[0].replace("metadata.xml.gz", elem.text)
 
-core_metadata(base_url, fusion)
+packages_metadata(base_url, fusion)
