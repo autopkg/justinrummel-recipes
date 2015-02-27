@@ -17,7 +17,7 @@
 	<array>
 		<dict>
 			<key>Processor</key>
-			<string>VMwareFusionURLProvider</string>
+			<string>VMwareFusionGuestToolsURLProvider</string>
 			<key>Arguments</key>
 			<dict>
 				<key>product_name</key>
