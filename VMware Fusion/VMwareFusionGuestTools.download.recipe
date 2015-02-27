@@ -31,6 +31,8 @@
 <!-- 				<string>com.vmware.fusion.tools.solaris.zip.tar</string> -->
 <!-- 				<string>com.vmware.fusion.tools.windows.zip.tar</string> -->
 <!-- 				<string>com.vmware.fusion.tools.winPre2k.zip.tar</string> -->
+				<key>base_url</key>
+				<string>https://softwareupdate.vmware.com/cds/vmw-desktop/</string>
 			</dict>
 		</dict>
 		<dict>
