@@ -48,7 +48,7 @@ class VMwareFusionGuestToolsURLProvider(Processor):
 
     __doc__ = description
 
-    def core_metadata(self, base_url, product_name):
+    def packages_metadata(self, base_url, product_name):
         request = urllib2.Request(base_url+product_name)
         # print base_url
 
@@ -80,12 +80,12 @@ class VMwareFusionGuestToolsURLProvider(Processor):
             urls.append(url.text)
 
         matching = [s for s in urls if latest in s]
-        core = [s for s in matching if "core" in s]
-        # print core[0]
+        packages = [s for s in matching if "packages" in s]
+        # print packages[0]
 
         vsus.close()
 
-        request = urllib2.Request(base_url+core[0])
+        request = urllib2.Request(base_url+packages[0])
 
         try:
             vLatest = urllib2.urlopen(request)
@@ -112,7 +112,7 @@ class VMwareFusionGuestToolsURLProvider(Processor):
         product_name = self.env.get("product_name", FUSION)
         base_url = self.env.get("base_url", VMWARE_BASE_URL)
 
-        self.env["url"] = self.core_metadata(base_url, product_name)
+        self.env["url"] = self.packages_metadata(base_url, product_name)
         self.output("Found URL %s" % self.env["url"])
 
 if __name__ == "__main__":
