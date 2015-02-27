@@ -53,7 +53,7 @@ class VMwareFusionGuestToolsURLProvider(Processor):
 
     __doc__ = description
 
-    def packages_metadata(self, base_url, product_name):
+    def packages_metadata(self, base_url, guest_tool, product_name):
         request = urllib2.Request(base_url+product_name)
         # print base_url
 
