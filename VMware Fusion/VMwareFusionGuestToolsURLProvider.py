@@ -32,16 +32,15 @@ class VMwareFusionGuestToolsURLProvider(Processor):
     description = "Provides URL to the latest VMware Fusion update release."
     input_variables = {
         "product_name": {
-            "required": False,
-            "description":
-                "Default is '%s." % FUSION,
+            "required": True,
+            "description": "Default is '%s." % FUSION,
         },
         "guest_tool": {
             "required": True,
             "description": "Default is %s." % DEFAULT_TOOL,
         },
         "base_url": {
-            "required": False,
+            "required": True,
             "description": "Default is '%s." % VMWARE_BASE_URL,
         },
     }
