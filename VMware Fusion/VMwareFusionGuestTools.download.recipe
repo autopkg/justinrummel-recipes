@@ -9,7 +9,7 @@
 	<key>Input</key>
 	<dict>
 		<key>NAME</key>
-		<string>com.vmware.fusionGuestTools</string>
+		<string>com.vmware.fusion.tools.darwin.zip.tar</string>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>0.2.5</string>
@@ -23,7 +23,7 @@
 				<key>product_name</key>
 				<string>fusion.xml</string>
 				<key>guest_tool</key>
-<!-- Pick One per Guest Tool Download -->
+<!-- Pick One per Guest Tool Download.  Suggest changing the NAME at top for correct filename -->
 				<string>com.vmware.fusion.tools.darwin.zip.tar</string>
 <!-- 				<string>com.vmware.fusion.tools.freebsd.zip.tar</string> -->
 <!-- 				<string>com.vmware.fusion.tools.linux.zip.tar</string> -->
@@ -41,7 +41,7 @@
 			<key>Arguments</key>
 			<dict>
 				<key>filename</key>
-				<string>%NAME%.zip.tar</string>
+				<string>%NAME%</string>
 			</dict>
 		</dict>
 		<dict>
