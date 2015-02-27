@@ -118,7 +118,7 @@ class VMwareFusionGuestToolsURLProvider(Processor):
         product_name = self.env.get("product_name", FUSION)
         base_url = self.env.get("base_url", VMWARE_BASE_URL)
 
-        self.env["url"] = self.packages_metadata(base_url, product_name)
+        self.env["url"] = self.packages_metadata(base_url, guest_tool, product_name)
         self.output("Found URL %s" % self.env["url"])
 
 if __name__ == "__main__":
