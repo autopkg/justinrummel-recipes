@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Description</key>
+	<string>Imports the VMwareFusion package into Munki.</string>
+	<key>Identifier</key>
+	<string>com.justinrummel.pkg.munki.VMwareFusion</string>
+	<key>Input</key>
+	<dict>
+		<key>NAME</key>
+		<string>VMwareFusion</string>
+		<key>MUNKI_REPO_SUBDIR</key>
+		<string>apps/VMware</string>
+		<key>pkginfo</key>
+		<dict>
+			<key>name</key>
+			<string>%NAME%</string>
+			<key>display_name</key>
+			<string>VMWare Fusion Pro</string>
+			<key>category</key>
+			<string>Productivity</string>
+			<key>developer</key>
+			<string>VMware</string>
+			<key>description</key>
+			<string></string>
+			<key>catalogs</key>
+			<array>
+				<string>testing</string>
+			</array>
+		</dict>
+	</dict>
+	<key>MinimumVersion</key>
+	<string>0.2.5</string>
+	<key>ParentRecipe</key>
+	<string>com.justinrummel.pkg.VMwareFusion</string>
+	<key>Process</key>
+	<array>
+		<dict>
+			<key>Processor</key>
+			<string>MunkiPkginfoMerger</string>
+			<key>Arguments</key>
+			<dict>
+				<key>additional_pkginfo</key>
+				<dict>
+					<key>version</key>
+					<string>%version%</string>
+				</dict>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>MunkiImporter</string>
+			<key>Arguments</key>
+			<dict/>
+		</dict>
+	</array>
+</dict>
+</plist>
