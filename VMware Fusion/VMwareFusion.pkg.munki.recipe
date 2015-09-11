@@ -28,6 +28,16 @@
 			<array>
 				<string>testing</string>
 			</array>
+                        <key>postinstall_script</key>
+                        <string>#!/bin/bash
+if [ -e /Applications/VMware\ Fusion.app/Contents/Library/Initialize\ VMware\ Fusion.tool ]
+then
+        /Applications/VMware\ Fusion.app/Contents/Library/Initialize\ VMware\ Fusion.tool set
+else
+        echo "Initializaion tool not present"
+        exit 1
+fi
+                        </string>
 		</dict>
 	</dict>
 	<key>MinimumVersion</key>
