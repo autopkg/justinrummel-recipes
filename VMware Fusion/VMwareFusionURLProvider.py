@@ -23,17 +23,23 @@ from autopkglib import Processor, ProcessorError
 __all__ = ["VMwareFusionURLProvider"]
 
 
-# variables 
+# variables
 VMWARE_BASE_URL = 'https://softwareupdate.vmware.com/cds/vmw-desktop/'
 FUSION = 'fusion.xml'
+MAJOR_VERSION = 'latest'
 
 class VMwareFusionURLProvider(Processor):
     description = "Provides URL to the latest VMware Fusion update release."
     input_variables = {
         "product_name": {
             "required": False,
-            "description": 
-                "Default is '%s." % FUSION,
+            "description":
+                "Default is '%s'." % FUSION,
+        },
+        "major_version": {
+            "required": False,
+            "description":
+                "Default is '%s'." % MAJOR_VERSION,
         },
         "base_url": {
             "required": False,
@@ -48,7 +54,7 @@ class VMwareFusionURLProvider(Processor):
 
     __doc__ = description
 
-    def core_metadata(self, base_url, product_name): 
+    def core_metadata(self, base_url, product_name, major_version):
         request = urllib2.Request(base_url+product_name)
         # print base_url
 
@@ -68,8 +74,12 @@ class VMwareFusionURLProvider(Processor):
         versions = []
         for metadata in metaList:
             version = metadata.find("version")
-            versions.append(version.text)
-
+            if (major_version == 'latest' or
+                    major_version == version.text.split('.')[0]):
+                versions.append(version.text)
+        if len(versions) == 0:
+            raise ProcessorError("Could not find any versions for the \
+                                  major_version '%s'." % major_version)
         versions.sort()
         latest = versions[-1]
         # print latest
@@ -87,12 +97,12 @@ class VMwareFusionURLProvider(Processor):
 
         request = urllib2.Request(base_url+core[0])
 
-        try: 
+        try:
             vLatest = urllib2.urlopen(request)
         except URLError, e:
             print e.reason
-        
-        buf = StringIO( vLatest.read())
+
+        buf = StringIO(vLatest.read())
         f = gzip.GzipFile(fileobj=buf)
         data = f.read()
         # print data
@@ -110,11 +120,12 @@ class VMwareFusionURLProvider(Processor):
         # Determine product_name, and base_url.
         product_name = self.env.get("product_name", FUSION)
         base_url = self.env.get("base_url", VMWARE_BASE_URL)
-        
-        self.env["url"] = self.core_metadata(base_url, product_name)
+        major_version = self.env.get("major_version", MAJOR_VERSION)
+
+        self.env["url"] = self.core_metadata(base_url, product_name,
+                                             major_version)
         self.output("Found URL %s" % self.env["url"])
 
 if __name__ == "__main__":
     processor = VMwareFusionURLProvider()
     processor.execute_shell()
-    
