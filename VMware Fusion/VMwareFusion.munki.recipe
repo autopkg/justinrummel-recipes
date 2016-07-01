@@ -66,6 +66,17 @@
 				<string>zip</string>
 			</dict>
 		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>CodeSignatureVerifier</string>
+			<key>Arguments</key>
+			<dict>
+				<key>input_path</key>
+				<string>%RECIPE_CACHE_DIR%/source/payload/VMware Fusion.app</string>
+				<key>requirement</key>
+				<string>anchor apple generic and identifier "com.vmware.fusion" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */) and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "8J7TAMPT4P"</string>
+			</dict>
+		</dict>
  		<dict>
 			<key>Comment</key>
 			<string>Extract a version string from Info.plist to use for the package.</string>
