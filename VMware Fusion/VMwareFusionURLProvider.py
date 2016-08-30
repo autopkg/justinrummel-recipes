@@ -44,6 +44,9 @@ class VMwareFusionURLProvider(Processor):
         "url": {
             "description": "URL to the latest VMware Fusion update release.",
         },
+        "version": {
+            "description": "Version to the latest VMware Fusion update release.",
+        },
     }
 
     __doc__ = description
@@ -71,7 +74,7 @@ class VMwareFusionURLProvider(Processor):
             versions.append(version.text)
 
         versions.sort()
-        latest = versions[-1]
+        self.latest = versions[-1]
         # print latest
 
         urls = []
@@ -79,7 +82,7 @@ class VMwareFusionURLProvider(Processor):
             url = metadata.find("url")
             urls.append(url.text)
 
-        matching = [s for s in urls if latest in s]
+        matching = [s for s in urls if self.latest in s]
         core = [s for s in matching if "core" in s]
         # print core[0]
 
@@ -113,6 +116,8 @@ class VMwareFusionURLProvider(Processor):
         
         self.env["url"] = self.core_metadata(base_url, product_name)
         self.output("Found URL %s" % self.env["url"])
+        self.env["version"] = self.version
+        self.output("Found Version %s" % self.env["version"])
 
 if __name__ == "__main__":
     processor = VMwareFusionURLProvider()
