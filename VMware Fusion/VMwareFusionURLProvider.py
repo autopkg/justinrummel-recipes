@@ -116,7 +116,7 @@ class VMwareFusionURLProvider(Processor):
         
         self.env["url"] = self.core_metadata(base_url, product_name)
         self.output("Found URL %s" % self.env["url"])
-        self.env["version"] = self.version
+        self.env["version"] = self.latest
         self.output("Found Version %s" % self.env["version"])
 
 if __name__ == "__main__":
