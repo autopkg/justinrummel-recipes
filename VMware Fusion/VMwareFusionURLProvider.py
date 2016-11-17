@@ -23,7 +23,7 @@ from autopkglib import Processor, ProcessorError
 __all__ = ["VMwareFusionURLProvider"]
 
 
-# variables 
+# variables
 VMWARE_BASE_URL = 'https://softwareupdate.vmware.com/cds/vmw-desktop/'
 FUSION = 'fusion.xml'
 
@@ -32,7 +32,7 @@ class VMwareFusionURLProvider(Processor):
     input_variables = {
         "product_name": {
             "required": False,
-            "description": 
+            "description":
                 "Default is '%s." % FUSION,
         },
         "base_url": {
@@ -44,11 +44,14 @@ class VMwareFusionURLProvider(Processor):
         "url": {
             "description": "URL to the latest VMware Fusion update release.",
         },
+        "version": {
+            "description": "Version to the latest VMware Fusion update release.",
+        },
     }
 
     __doc__ = description
 
-    def core_metadata(self, base_url, product_name): 
+    def core_metadata(self, base_url, product_name):
         request = urllib2.Request(base_url+product_name)
         # print base_url
 
@@ -71,7 +74,7 @@ class VMwareFusionURLProvider(Processor):
             versions.append(version.text)
 
         versions.sort()
-        latest = versions[-1]
+        self.latest = versions[-1]
         # print latest
 
         urls = []
@@ -79,7 +82,7 @@ class VMwareFusionURLProvider(Processor):
             url = metadata.find("url")
             urls.append(url.text)
 
-        matching = [s for s in urls if latest in s]
+        matching = [s for s in urls if self.latest in s]
         core = [s for s in matching if "core" in s]
         # print core[0]
 
@@ -87,11 +90,11 @@ class VMwareFusionURLProvider(Processor):
 
         request = urllib2.Request(base_url+core[0])
 
-        try: 
+        try:
             vLatest = urllib2.urlopen(request)
         except URLError, e:
             print e.reason
-        
+
         buf = StringIO( vLatest.read())
         f = gzip.GzipFile(fileobj=buf)
         data = f.read()
@@ -110,11 +113,12 @@ class VMwareFusionURLProvider(Processor):
         # Determine product_name, and base_url.
         product_name = self.env.get("product_name", FUSION)
         base_url = self.env.get("base_url", VMWARE_BASE_URL)
-        
+
         self.env["url"] = self.core_metadata(base_url, product_name)
         self.output("Found URL %s" % self.env["url"])
+        self.env["version"] = self.latest
+        self.output("Found Version %s" % self.env["version"])
 
 if __name__ == "__main__":
     processor = VMwareFusionURLProvider()
     processor.execute_shell()
-    
