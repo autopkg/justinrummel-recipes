@@ -19,6 +19,7 @@ import urllib, urllib2, gzip
 from xml.etree import ElementTree
 from StringIO import StringIO
 from autopkglib import Processor, ProcessorError
+from distutils.version import LooseVersion
 
 __all__ = ["VMwareFusionURLProvider"]
 
@@ -73,7 +74,7 @@ class VMwareFusionURLProvider(Processor):
             version = metadata.find("version")
             versions.append(version.text)
 
-        versions.sort()
+        versions.sort(key=LooseVersion)
         self.latest = versions[-1]
         # print latest
 
