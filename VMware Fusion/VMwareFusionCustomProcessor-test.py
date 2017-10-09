@@ -18,6 +18,7 @@ import urllib, urllib2, gzip
 
 from xml.etree import ElementTree
 from StringIO import StringIO
+from distutils.version import LooseVersion
 
 # variables
 base_url = 'https://softwareupdate.vmware.com/cds/vmw-desktop/'
@@ -46,7 +47,7 @@ def core_metadata(base_url, fusion):
         version = metadata.find("version")
         versions.append(version.text)
 
-    versions.sort()
+    versions.sort(key=LooseVersion)
     latest = versions[-1]
     # print latest
 
