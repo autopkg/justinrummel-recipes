@@ -1,2 +1,5 @@
-
+# Python Stuff
 *.pyc
+
+# Mac garbage
+.DS_Store
