@@ -14,6 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import absolute_import
+from __future__ import print_function
 import urllib, urllib2, gzip
 
 from xml.etree import ElementTree
@@ -27,12 +29,12 @@ fusion = 'fusion.xml'
 # functions
 def core_metadata(base_url, fusion):
     request = urllib2.Request(base_url+fusion)
-    print base_url
+    print(base_url)
 
     try:
         vsus = urllib2.urlopen(request)
-    except URLError, e:
-        print e.reason
+    except URLError as e:
+        print(e.reason)
 
     data = vsus.read()
     # print data
@@ -40,7 +42,7 @@ def core_metadata(base_url, fusion):
     try:
         metaList = ElementTree.fromstring(data)
     except ExpatData:
-        print "Unable to parse XML data from string"
+        print("Unable to parse XML data from string")
 
     versions = []
     for metadata in metaList:
@@ -58,7 +60,7 @@ def core_metadata(base_url, fusion):
 
     matching = [s for s in urls if latest in s]
     core = [s for s in matching if "core" in s]
-    print core[0]
+    print(core[0])
 
     vsus.close()
 
@@ -66,8 +68,8 @@ def core_metadata(base_url, fusion):
 
     try:
         vLatest = urllib2.urlopen(request)
-    except URLError, e:
-        print e.reason
+    except URLError as e:
+        print(e.reason)
 
     buf = StringIO( vLatest.read())
     f = gzip.GzipFile(fileobj=buf)
@@ -77,10 +79,10 @@ def core_metadata(base_url, fusion):
     try:
         metadataResponse = ElementTree.fromstring(data)
     except ExpatData:
-        print "Unable to parse XML data from string"
+        print("Unable to parse XML data from string")
 
     relativePath = metadataResponse.find("bulletin/componentList/component/relativePath")
-    print core[0].replace("metadata.xml.gz", relativePath.text)
-    print base_url+core[0].replace("metadata.xml.gz", relativePath.text)
+    print(core[0].replace("metadata.xml.gz", relativePath.text))
+    print(base_url+core[0].replace("metadata.xml.gz", relativePath.text))
 
 core_metadata(base_url, fusion)

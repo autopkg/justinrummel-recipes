@@ -14,6 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import absolute_import
+from __future__ import print_function
 import urllib, urllib2, gzip
 
 from xml.etree import ElementTree
@@ -58,8 +60,8 @@ class VMwareFusionGuestToolsURLProvider(Processor):
 
         try:
             vsus = urllib2.urlopen(request)
-        except URLError, e:
-            print e.reason
+        except URLError as e:
+            print(e.reason)
 
         data = vsus.read()
         # print data
@@ -67,7 +69,7 @@ class VMwareFusionGuestToolsURLProvider(Processor):
         try:
             metaList = ElementTree.fromstring(data)
         except ExpatData:
-            print "Unable to parse XML data from string"
+            print("Unable to parse XML data from string")
 
         versions = []
         for metadata in metaList:
@@ -93,8 +95,8 @@ class VMwareFusionGuestToolsURLProvider(Processor):
 
         try:
             vLatest = urllib2.urlopen(request)
-        except URLError, e:
-            print e.reason
+        except URLError as e:
+            print(e.reason)
 
         buf = StringIO( vLatest.read())
         f = gzip.GzipFile(fileobj=buf)
@@ -104,7 +106,7 @@ class VMwareFusionGuestToolsURLProvider(Processor):
         try:
             metadataResponse = ElementTree.fromstring(data)
         except ExpatData:
-            print "Unable to parse XML data from string"
+            print("Unable to parse XML data from string")
 
         return base_url+packages[0].replace("metadata.xml.gz", "")+guest_tool
 

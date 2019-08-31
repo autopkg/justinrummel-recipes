@@ -14,6 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import absolute_import
+from __future__ import print_function
 import urllib, urllib2, gzip
 
 from xml.etree import ElementTree
@@ -26,12 +28,12 @@ fusion = 'fusion.xml'
 # functions
 def packages_metadata(base_url, fusion):
     request = urllib2.Request(base_url+fusion)
-    print base_url
+    print(base_url)
 
     try:
         vsus = urllib2.urlopen(request)
-    except URLError, e:
-        print e.reason
+    except URLError as e:
+        print(e.reason)
 
     data = vsus.read()
     # print data
@@ -39,7 +41,7 @@ def packages_metadata(base_url, fusion):
     try:
         metaList = ElementTree.fromstring(data)
     except ExpatData:
-        print "Unable to parse XML data from string"
+        print("Unable to parse XML data from string")
 
     versions = []
     for metadata in metaList:
@@ -57,7 +59,7 @@ def packages_metadata(base_url, fusion):
 
     matching = [s for s in urls if latest in s]
     packages = [s for s in matching if "package" in s]
-    print packages[0]
+    print(packages[0])
 
     vsus.close()
 
@@ -65,24 +67,24 @@ def packages_metadata(base_url, fusion):
 
     try:
         vLatest = urllib2.urlopen(request)
-    except URLError, e:
-        print e.reason
+    except URLError as e:
+        print(e.reason)
 
     buf = StringIO( vLatest.read())
     f = gzip.GzipFile(fileobj=buf)
     data = f.read()
     # print data
 
-    print base_url+packages[0].replace("metadata.xml.gz", "")
+    print(base_url+packages[0].replace("metadata.xml.gz", ""))
 
     try:
         metadataResponse = ElementTree.fromstring(data)
     except ExpatData:
-        print "Unable to parse XML data from string"
+        print("Unable to parse XML data from string")
 
     for elem in metadataResponse.findall('bulletin/componentList/component/relativePath'):
         # print elem.text
         # print packages[0].replace("metadata.xml.gz", elem.text)
-        print base_url+packages[0].replace("metadata.xml.gz", elem.text)
+        print(base_url+packages[0].replace("metadata.xml.gz", elem.text))
 
 packages_metadata(base_url, fusion)
