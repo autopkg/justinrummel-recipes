@@ -17,9 +17,13 @@
 from __future__ import absolute_import, print_function
 
 import gzip
-import urllib2
 from StringIO import StringIO
 from xml.etree import ElementTree
+
+try:
+    from urllib.request import urlopen  # For Python 3
+except ImportError:
+    from urllib2 import urlopen  # For Python 2
 
 # variables
 base_url = 'https://softwareupdate.vmware.com/cds/vmw-desktop/'
@@ -27,12 +31,11 @@ fusion = 'fusion.xml'
 
 # functions
 def packages_metadata(base_url, fusion):
-    request = urllib2.Request(base_url+fusion)
     print(base_url)
 
     try:
-        vsus = urllib2.urlopen(request)
-    except URLError as e:
+        vsus = urlopen(base_url + fusion)
+    except Exception as e:
         print(e.reason)
 
     data = vsus.read()
@@ -63,11 +66,9 @@ def packages_metadata(base_url, fusion):
 
     vsus.close()
 
-    request = urllib2.Request(base_url+packages[0])
-
     try:
-        vLatest = urllib2.urlopen(request)
-    except URLError as e:
+        vLatest = urlopen(base_url + packages[0])
+    except Exception as e:
         print(e.reason)
 
     buf = StringIO( vLatest.read())

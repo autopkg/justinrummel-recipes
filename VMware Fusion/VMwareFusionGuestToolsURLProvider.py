@@ -17,11 +17,15 @@
 from __future__ import absolute_import, print_function
 
 import gzip
-import urllib2
 from StringIO import StringIO
 from xml.etree import ElementTree
 
 from autopkglib import Processor, ProcessorError
+
+try:
+    from urllib.request import urlopen  # For Python 3
+except ImportError:
+    from urllib2 import urlopen  # For Python 2
 
 __all__ = ["VMwareFusionGuestToolsURLProvider"]
 
@@ -56,12 +60,11 @@ class VMwareFusionGuestToolsURLProvider(Processor):
     __doc__ = description
 
     def packages_metadata(self, base_url, guest_tool, product_name):
-        request = urllib2.Request(base_url+product_name)
         # print(base_url)
 
         try:
-            vsus = urllib2.urlopen(request)
-        except URLError as e:
+            vsus = urlopen(base_url + product_name)
+        except Exception as e:
             print(e.reason)
 
         data = vsus.read()
@@ -92,11 +95,9 @@ class VMwareFusionGuestToolsURLProvider(Processor):
 
         vsus.close()
 
-        request = urllib2.Request(base_url+packages[0])
-
         try:
-            vLatest = urllib2.urlopen(request)
-        except URLError as e:
+            vLatest = urlopen(base_url + packages[0])
+        except Exception as e:
             print(e.reason)
 
         buf = StringIO( vLatest.read())
