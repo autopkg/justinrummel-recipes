@@ -14,12 +14,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from __future__ import absolute_import
-from __future__ import print_function
-import urllib, urllib2, gzip
+from __future__ import absolute_import, print_function
 
-from xml.etree import ElementTree
+import gzip
+import urllib2
 from StringIO import StringIO
+from xml.etree import ElementTree
 
 # variables
 base_url = 'https://softwareupdate.vmware.com/cds/vmw-desktop/'
