@@ -57,7 +57,7 @@ class VMwareFusionGuestToolsURLProvider(Processor):
 
     def packages_metadata(self, base_url, guest_tool, product_name):
         request = urllib2.Request(base_url+product_name)
-        # print base_url
+        # print(base_url)
 
         try:
             vsus = urllib2.urlopen(request)
@@ -65,7 +65,7 @@ class VMwareFusionGuestToolsURLProvider(Processor):
             print(e.reason)
 
         data = vsus.read()
-        # print data
+        # print(data)
 
         try:
             metaList = ElementTree.fromstring(data)
@@ -79,7 +79,7 @@ class VMwareFusionGuestToolsURLProvider(Processor):
 
         versions.sort()
         latest = versions[-1]
-        # print latest
+        # print(latest)
 
         urls = []
         for metadata in metaList:
@@ -88,7 +88,7 @@ class VMwareFusionGuestToolsURLProvider(Processor):
 
         matching = [s for s in urls if latest in s]
         packages = [s for s in matching if "packages" in s]
-        # print packages[0]
+        # print(packages[0])
 
         vsus.close()
 
@@ -102,7 +102,7 @@ class VMwareFusionGuestToolsURLProvider(Processor):
         buf = StringIO( vLatest.read())
         f = gzip.GzipFile(fileobj=buf)
         data = f.read()
-        # print data
+        # print(data)
 
         try:
             metadataResponse = ElementTree.fromstring(data)
@@ -113,7 +113,7 @@ class VMwareFusionGuestToolsURLProvider(Processor):
 
         # relativePath = metadataResponse.find("bulletin/componentList/component/relativePath")
         #for elem in metadataResponse.findall('bulletin/componentList/component/relativePath'):
-            # print elem.text
+            # print(elem.text)
         #    return base_url+packages[0].replace("metadata.xml.gz", elem.text)
 
     def main(self):

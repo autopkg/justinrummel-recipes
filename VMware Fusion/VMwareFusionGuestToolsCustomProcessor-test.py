@@ -36,7 +36,7 @@ def packages_metadata(base_url, fusion):
         print(e.reason)
 
     data = vsus.read()
-    # print data
+    # print(data)
 
     try:
         metaList = ElementTree.fromstring(data)
@@ -50,7 +50,7 @@ def packages_metadata(base_url, fusion):
 
     versions.sort()
     latest = versions[-1]
-    # print latest
+    # print(latest)
 
     urls = []
     for metadata in metaList:
@@ -73,7 +73,7 @@ def packages_metadata(base_url, fusion):
     buf = StringIO( vLatest.read())
     f = gzip.GzipFile(fileobj=buf)
     data = f.read()
-    # print data
+    # print(data)
 
     print(base_url+packages[0].replace("metadata.xml.gz", ""))
 
@@ -83,8 +83,8 @@ def packages_metadata(base_url, fusion):
         print("Unable to parse XML data from string")
 
     for elem in metadataResponse.findall('bulletin/componentList/component/relativePath'):
-        # print elem.text
-        # print packages[0].replace("metadata.xml.gz", elem.text)
+        # print(elem.text)
+        # print(packages[0].replace("metadata.xml.gz", elem.text))
         print(base_url+packages[0].replace("metadata.xml.gz", elem.text))
 
 packages_metadata(base_url, fusion)

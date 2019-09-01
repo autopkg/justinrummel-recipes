@@ -37,7 +37,7 @@ def core_metadata(base_url, fusion):
         print(e.reason)
 
     data = vsus.read()
-    # print data
+    # print(data)
 
     try:
         metaList = ElementTree.fromstring(data)
@@ -51,7 +51,7 @@ def core_metadata(base_url, fusion):
 
     versions.sort(key=LooseVersion)
     latest = versions[-1]
-    # print latest
+    # print(latest)
 
     urls = []
     for metadata in metaList:
@@ -74,7 +74,7 @@ def core_metadata(base_url, fusion):
     buf = StringIO( vLatest.read())
     f = gzip.GzipFile(fileobj=buf)
     data = f.read()
-    # print data
+    # print(data)
 
     try:
         metadataResponse = ElementTree.fromstring(data)
