@@ -22,8 +22,10 @@ from xml.etree import ElementTree
 
 try:
     from urllib.request import urlopen  # For Python 3
+    from urllib.error import URLError
 except ImportError:
     from urllib2 import urlopen  # For Python 2
+    from urllib2 import URLError
 
 # variables
 base_url = 'https://softwareupdate.vmware.com/cds/vmw-desktop/'
@@ -35,7 +37,7 @@ def packages_metadata(base_url, fusion):
 
     try:
         vsus = urlopen(base_url + fusion)
-    except BaseException as e:
+    except URLError as e:
         print(e.reason)
 
     data = vsus.read()
@@ -68,7 +70,7 @@ def packages_metadata(base_url, fusion):
 
     try:
         vLatest = urlopen(base_url + packages[0])
-    except BaseException as e:
+    except URLError as e:
         print(e.reason)
 
     buf = StringIO( vLatest.read())
