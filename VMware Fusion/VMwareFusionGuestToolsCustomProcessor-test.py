@@ -35,7 +35,7 @@ def packages_metadata(base_url, fusion):
 
     try:
         vsus = urlopen(base_url + fusion)
-    except Exception as e:
+    except BaseException as e:
         print(e.reason)
 
     data = vsus.read()
@@ -68,7 +68,7 @@ def packages_metadata(base_url, fusion):
 
     try:
         vLatest = urlopen(base_url + packages[0])
-    except Exception as e:
+    except BaseException as e:
         print(e.reason)
 
     buf = StringIO( vLatest.read())

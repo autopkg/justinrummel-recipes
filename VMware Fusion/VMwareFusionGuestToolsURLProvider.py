@@ -64,7 +64,7 @@ class VMwareFusionGuestToolsURLProvider(Processor):
 
         try:
             vsus = urlopen(base_url + product_name)
-        except Exception as e:
+        except BaseException as e:
             print(e.reason)
 
         data = vsus.read()
@@ -97,7 +97,7 @@ class VMwareFusionGuestToolsURLProvider(Processor):
 
         try:
             vLatest = urlopen(base_url + packages[0])
-        except Exception as e:
+        except BaseException as e:
             print(e.reason)
 
         buf = StringIO( vLatest.read())
