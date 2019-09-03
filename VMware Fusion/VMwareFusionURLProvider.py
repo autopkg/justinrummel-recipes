@@ -14,12 +14,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import urllib, urllib2, gzip
+from __future__ import absolute_import, print_function
 
-from xml.etree import ElementTree
-from StringIO import StringIO
-from autopkglib import Processor, ProcessorError
+import gzip
 from distutils.version import LooseVersion
+from StringIO import StringIO
+from xml.etree import ElementTree
+
+from autopkglib import Processor, ProcessorError
+
+try:
+    from urllib.request import urlopen  # For Python 3
+    from urllib.error import URLError
+except ImportError:
+    from urllib2 import urlopen  # For Python 2
+    from urllib2 import URLError
 
 __all__ = ["VMwareFusionURLProvider"]
 
@@ -53,21 +62,20 @@ class VMwareFusionURLProvider(Processor):
     __doc__ = description
 
     def core_metadata(self, base_url, product_name):
-        request = urllib2.Request(base_url+product_name)
-        # print base_url
+        # print(base_url)
 
         try:
-            vsus = urllib2.urlopen(request)
-        except URLError, e:
-            print e.reason
+            vsus = urlopen(base_url + product_name)
+        except URLError as e:
+            print(e.reason)
 
         data = vsus.read()
-        # print data
+        # print(data)
 
         try:
             metaList = ElementTree.fromstring(data)
         except ExpatData:
-            print "Unable to parse XML data from string"
+            print("Unable to parse XML data from string")
 
         versions = []
         for metadata in metaList:
@@ -76,7 +84,7 @@ class VMwareFusionURLProvider(Processor):
 
         versions.sort(key=LooseVersion)
         self.latest = versions[-1]
-        # print latest
+        # print(latest)
 
         urls = []
         for metadata in metaList:
@@ -85,29 +93,27 @@ class VMwareFusionURLProvider(Processor):
 
         matching = [s for s in urls if self.latest in s]
         core = [s for s in matching if "core" in s]
-        # print core[0]
+        # print(core[0])
 
         vsus.close()
 
-        request = urllib2.Request(base_url+core[0])
-
         try:
-            vLatest = urllib2.urlopen(request)
-        except URLError, e:
-            print e.reason
+            vLatest = urlopen(base_url + core[0])
+        except URLError as e:
+            print(e.reason)
 
         buf = StringIO( vLatest.read())
         f = gzip.GzipFile(fileobj=buf)
         data = f.read()
-        # print data
+        # print(data)
 
         try:
             metadataResponse = ElementTree.fromstring(data)
         except ExpatData:
-            print "Unable to parse XML data from string"
+            print("Unable to parse XML data from string")
 
         relativePath = metadataResponse.find("bulletin/componentList/component/relativePath")
-        # print core[0].replace("metadata.xml.gz", relativePath.text)
+        # print(core[0].replace("metadata.xml.gz", relativePath.text))
         return base_url+core[0].replace("metadata.xml.gz", relativePath.text)
 
     def main(self):
