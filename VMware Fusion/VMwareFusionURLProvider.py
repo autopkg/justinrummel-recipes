@@ -34,28 +34,23 @@ __all__ = ["VMwareFusionURLProvider"]
 
 
 # variables
-VMWARE_BASE_URL = 'https://softwareupdate.vmware.com/cds/vmw-desktop/'
-FUSION = 'fusion.xml'
+VMWARE_BASE_URL = "https://softwareupdate.vmware.com/cds/vmw-desktop/"
+FUSION = "fusion.xml"
+
 
 class VMwareFusionURLProvider(Processor):
     description = "Provides URL to the latest VMware Fusion update release."
     input_variables = {
-        "product_name": {
-            "required": False,
-            "description":
-                "Default is '%s." % FUSION,
-        },
+        "product_name": {"required": False, "description": "Default is '%s." % FUSION},
         "base_url": {
             "required": False,
             "description": "Default is '%s." % VMWARE_BASE_URL,
         },
     }
     output_variables = {
-        "url": {
-            "description": "URL to the latest VMware Fusion update release.",
-        },
+        "url": {"description": "URL to the latest VMware Fusion update release."},
         "version": {
-            "description": "Version to the latest VMware Fusion update release.",
+            "description": "Version to the latest VMware Fusion update release."
         },
     }
 
@@ -102,7 +97,7 @@ class VMwareFusionURLProvider(Processor):
         except URLError as e:
             print(e.reason)
 
-        buf = StringIO( vLatest.read())
+        buf = StringIO(vLatest.read())
         f = gzip.GzipFile(fileobj=buf)
         data = f.read()
         # print(data)
@@ -112,9 +107,11 @@ class VMwareFusionURLProvider(Processor):
         except ExpatData:
             print("Unable to parse XML data from string")
 
-        relativePath = metadataResponse.find("bulletin/componentList/component/relativePath")
+        relativePath = metadataResponse.find(
+            "bulletin/componentList/component/relativePath"
+        )
         # print(core[0].replace("metadata.xml.gz", relativePath.text))
-        return base_url+core[0].replace("metadata.xml.gz", relativePath.text)
+        return base_url + core[0].replace("metadata.xml.gz", relativePath.text)
 
     def main(self):
         # Determine product_name, and base_url.
@@ -125,6 +122,7 @@ class VMwareFusionURLProvider(Processor):
         self.output("Found URL %s" % self.env["url"])
         self.env["version"] = self.latest
         self.output("Found Version %s" % self.env["version"])
+
 
 if __name__ == "__main__":
     processor = VMwareFusionURLProvider()
