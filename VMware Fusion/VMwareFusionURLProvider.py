@@ -18,17 +18,9 @@ from __future__ import absolute_import, print_function
 
 import gzip
 from distutils.version import LooseVersion
-from StringIO import StringIO
 from xml.etree import ElementTree
 
-from autopkglib import Processor, ProcessorError
-
-try:
-    from urllib.request import urlopen  # For Python 3
-    from urllib.error import URLError
-except ImportError:
-    from urllib2 import urlopen  # For Python 2
-    from urllib2 import URLError
+from autopkglib import URLGetter, ProcessorError
 
 __all__ = ["VMwareFusionURLProvider"]
 
@@ -38,7 +30,7 @@ VMWARE_BASE_URL = "https://softwareupdate.vmware.com/cds/vmw-desktop/"
 FUSION = "fusion.xml"
 
 
-class VMwareFusionURLProvider(Processor):
+class VMwareFusionURLProvider(URLGetter):
     description = "Provides URL to the latest VMware Fusion update release."
     input_variables = {
         "product_name": {"required": False, "description": "Default is '%s." % FUSION},
@@ -57,20 +49,13 @@ class VMwareFusionURLProvider(Processor):
     __doc__ = description
 
     def core_metadata(self, base_url, product_name):
-        # print(base_url)
+        vsus = self.download(base_url + product_name, text=True)
+        # self.output("Metadata fetch result: {}".format(vsus), verbose_level=2)
 
         try:
-            vsus = urlopen(base_url + product_name)
-        except URLError as e:
-            print(e.reason)
-
-        data = vsus.read()
-        # print(data)
-
-        try:
-            metaList = ElementTree.fromstring(data)
-        except ExpatData:
-            print("Unable to parse XML data from string")
+            metaList = ElementTree.fromstring(vsus)
+        except ElementTree.ExpatData:
+            raise ProcessorError("Unable to parse XML data from string!")
 
         versions = []
         for metadata in metaList:
@@ -79,7 +64,6 @@ class VMwareFusionURLProvider(Processor):
 
         versions.sort(key=LooseVersion)
         self.latest = versions[-1]
-        # print(latest)
 
         urls = []
         for metadata in metaList:
@@ -88,29 +72,28 @@ class VMwareFusionURLProvider(Processor):
 
         matching = [s for s in urls if self.latest in s]
         core = [s for s in matching if "core" in s]
-        # print(core[0])
-
-        vsus.close()
-
+        self.output("Core value: {}".format(core), verbose_level=2)
+        self.output("URL: {}".format(base_url + core[0]))
+        vLatest = self.download(base_url + core[0], text=False)
+        print("***vLatest: {}".format(vLatest))
+        # buf = StringIO(vLatest.read())
+        # f = gzip.GzipFile(fileobj=buf)
+        # data = f.read()
+        # # print(data)
         try:
-            vLatest = urlopen(base_url + core[0])
-        except URLError as e:
-            print(e.reason)
-
-        buf = StringIO(vLatest.read())
-        f = gzip.GzipFile(fileobj=buf)
-        data = f.read()
-        # print(data)
+            with gzip.open(vLatest, 'rb') as f:
+                data = f.read()
+        except Exception as e:
+            raise ProcessorError(e)
 
         try:
             metadataResponse = ElementTree.fromstring(data)
-        except ExpatData:
-            print("Unable to parse XML data from string")
+        except ElementTree.ExpatData:
+            raise ProcessorError("Unable to parse XML data from string")
 
         relativePath = metadataResponse.find(
             "bulletin/componentList/component/relativePath"
         )
-        # print(core[0].replace("metadata.xml.gz", relativePath.text))
         return base_url + core[0].replace("metadata.xml.gz", relativePath.text)
 
     def main(self):
