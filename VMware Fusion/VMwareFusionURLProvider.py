@@ -78,7 +78,7 @@ class VMwareFusionURLProvider(URLGetter):
             version = metadata.find("version")
             if major_version == "latest" or major_version == version.text.split(".")[0]:
                 versions.append(version.text)
-        if len(versions) == 0:
+        if versions == []:
             raise ProcessorError(
                 "Could not find any versions for the "
                 "major_version '%s'." % major_version
