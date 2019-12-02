@@ -19,6 +19,7 @@ from __future__ import absolute_import, print_function
 import gzip
 from distutils.version import LooseVersion
 from xml.etree import ElementTree
+from xml.parsers.expat import ExpatError
 
 from autopkglib import URLGetter, ProcessorError
 
@@ -62,8 +63,8 @@ class VMwareFusionURLProvider(URLGetter):
 
         try:
             metaList = ElementTree.fromstring(vsus)
-        except ElementTree.ExpatData:
-            raise ProcessorError("Unable to parse XML data from string!")
+        except ExpatError:
+            raise ProcessorError("Unable to parse XML data from string.")
 
         versions = []
         for metadata in metaList:
@@ -101,8 +102,8 @@ class VMwareFusionURLProvider(URLGetter):
 
         try:
             metadataResponse = ElementTree.fromstring(data)
-        except ElementTree.ExpatData:
-            raise ProcessorError("Unable to parse XML data from string")
+        except ExpatError:
+            raise ProcessorError("Unable to parse XML data from string.")
 
         relativePath = metadataResponse.find(
             "bulletin/componentList/component/relativePath"
