@@ -84,7 +84,7 @@ class VMwareFusionURLProvider(URLGetter):
         # data = f.read()
         # # print(data)
         try:
-            with gzip.open(vLatest, 'rb') as f:
+            with gzip.open(vLatest, "rb") as f:
                 data = f.read()
         except Exception as e:
             raise ProcessorError(e)
