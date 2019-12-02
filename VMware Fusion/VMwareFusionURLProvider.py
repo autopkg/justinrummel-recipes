@@ -33,6 +33,8 @@ DEFAULT_MAJOR_VERSION = "11"
 
 
 class VMwareFusionURLProvider(URLGetter):
+    """Processor class."""
+
     description = "Provides URL to the latest VMware Fusion update release."
     input_variables = {
         "product_name": {
@@ -58,6 +60,10 @@ class VMwareFusionURLProvider(URLGetter):
     __doc__ = description
 
     def core_metadata(self, base_url, product_name, major_version):
+        """Given a base URL, product name, and major version, produce the
+        product download URL and latest version.
+        """
+
         vsus = self.download(base_url + product_name, text=True)
         # self.output("Metadata fetch result: {}".format(vsus), verbose_level=2)
 
@@ -114,16 +120,19 @@ class VMwareFusionURLProvider(URLGetter):
         )
 
     def main(self):
-        # Determine product_name, and base_url.
+        """Main process."""
+
+        # Gather input variables
         product_name = self.env.get("product_name", FUSION)
         base_url = self.env.get("base_url", VMWARE_BASE_URL)
         major_version = self.env.get("major_version", DEFAULT_MAJOR_VERSION)
 
+        # Look up URL and set output variables
         self.env["url"], self.env["version"] = self.core_metadata(
             base_url, product_name, major_version
         )
-        self.output("Found URL %s" % self.env["url"])
-        self.output("Found Version %s" % self.env["version"])
+        self.output("Found URL: %s" % self.env["url"])
+        self.output("Found Version: %s" % self.env["version"])
 
 
 if __name__ == "__main__":
