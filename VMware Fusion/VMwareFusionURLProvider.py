@@ -33,7 +33,10 @@ FUSION = "fusion.xml"
 class VMwareFusionURLProvider(URLGetter):
     description = "Provides URL to the latest VMware Fusion update release."
     input_variables = {
-        "product_name": {"required": False, "description": "Default is '%s." % FUSION},
+        "product_name": {
+            "required": False,
+            "description": "Default is '%s'." % FUSION,
+        },
         "base_url": {
             "required": False,
             "description": "Default is '%s." % VMWARE_BASE_URL,
