@@ -17,6 +17,7 @@
 
 from __future__ import absolute_import, print_function
 
+import os
 import gzip
 from distutils.version import LooseVersion
 from xml.etree import ElementTree
@@ -38,10 +39,7 @@ class VMwareFusionURLProvider(URLGetter):
 
     description = "Provides URL to the latest VMware Fusion update release."
     input_variables = {
-        "product_name": {
-            "required": False,
-            "description": "Default is '%s'." % FUSION,
-        },
+        "product_name": {"required": False, "description": "Default is '%s'." % FUSION},
         "base_url": {
             "required": False,
             "description": "Default is '%s." % VMWARE_BASE_URL,
@@ -66,7 +64,6 @@ class VMwareFusionURLProvider(URLGetter):
         """
 
         vsus = self.download(base_url + product_name, text=True)
-        # self.output("Metadata fetch result: {}".format(vsus), verbose_level=2)
 
         try:
             metaList = ElementTree.fromstring(vsus)
@@ -95,12 +92,10 @@ class VMwareFusionURLProvider(URLGetter):
         core = [s for s in matching if "core" in s]
         self.output("Core value: {}".format(core), verbose_level=2)
         self.output("URL: {}".format(base_url + core[0]))
-        vLatest = self.download(base_url + core[0], text=False)
-        print("***vLatest: {}".format(vLatest))
-        # buf = StringIO(vLatest.read())
-        # f = gzip.GzipFile(fileobj=buf)
-        # data = f.read()
-        # # print(data)
+        temp_file = os.path.join(
+            self.env["RECIPE_CACHE_DIR"], "downloads", "metadata.xml.gz"
+        )
+        vLatest = self.download_to_file(base_url + core[0], temp_file)
         try:
             with gzip.open(vLatest, "rb") as f:
                 data = f.read()
