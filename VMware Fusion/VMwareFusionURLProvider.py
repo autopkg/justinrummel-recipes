@@ -62,7 +62,6 @@ class VMwareFusionURLProvider(URLGetter):
         """Given a base URL, product name, and major version, produce the
         product download URL and latest version.
         """
-
         vsus = self.download(base_url + product_name, text=True)
 
         try:
@@ -92,9 +91,13 @@ class VMwareFusionURLProvider(URLGetter):
         core = [s for s in matching if "core" in s]
         self.output("Core value: {}".format(core), verbose_level=2)
         self.output("URL: {}".format(base_url + core[0]))
-        temp_file = os.path.join(
-            self.env["RECIPE_CACHE_DIR"], "downloads", "metadata.xml.gz"
-        )
+        download_dir = os.path.join(self.env["RECIPE_CACHE_DIR"], "downloads")
+        try:
+            os.makedirs(download_dir)
+        except os.error:
+            # Directory already exists
+            pass
+        temp_file = os.path.join(download_dir, "metadata.xml.gz")
         vLatest = self.download_to_file(base_url + core[0], temp_file)
         try:
             with gzip.open(vLatest, "rb") as f:
