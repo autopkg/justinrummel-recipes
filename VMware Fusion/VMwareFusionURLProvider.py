@@ -17,13 +17,20 @@
 
 from __future__ import absolute_import, print_function
 
-import os
 import gzip
+import os
+import re
 from distutils.version import LooseVersion
 from xml.etree import ElementTree
 from xml.parsers.expat import ExpatError
 
-from autopkglib import URLGetter, ProcessorError
+from autopkglib import ProcessorError, URLGetter
+
+try:
+    from urlparse import urljoin
+except ImportError:
+    from urllib.parse import urljoin
+
 
 __all__ = ["VMwareFusionURLProvider"]
 
@@ -62,35 +69,41 @@ class VMwareFusionURLProvider(URLGetter):
         """Given a base URL, product name, and major version, produce the
         product download URL and latest version.
         """
-        vsus = self.download(base_url + product_name, text=True)
+        fusion_xml_url = urljoin(base_url, product_name)
+        self.output("Fetching fusion.xml from {}".format(fusion_xml_url))
+        vsus = self.download(fusion_xml_url, text=True)
 
         try:
             metaList = ElementTree.fromstring(vsus)
         except ExpatError:
             raise ProcessorError("Unable to parse XML data from string.")
 
-        versions = []
+        build_re = re.compile(r"^fusion\/([\d\.]+)\/(\d+)\/")
+
+        versions = {}
         for metadata in metaList:
             version = metadata.find("version")
+            url = metadata.find("url")
             if major_version == "latest" or major_version == version.text.split(".")[0]:
-                versions.append(version.text)
-        if versions == []:
+                # We actually want the URL, instead of the version itself
+                self.output(
+                    "Found version: {} with URL: {}".format(version.text, url.text),
+                    verbose_level=4,
+                )
+                match = build_re.search(url.text)
+                if match.groups():
+                    versions[match.group(1)] = url.text
+        if not versions:
             raise ProcessorError(
                 "Could not find any versions for the "
                 "major_version '%s'." % major_version
             )
-        versions.sort(key=LooseVersion)
-        latest_version = versions[-1]
-
-        urls = []
-        for metadata in metaList:
-            url = metadata.find("url")
-            urls.append(url.text)
-
-        matching = [s for s in urls if latest_version in s]
-        core = [s for s in matching if "core" in s]
-        self.output("Core value: {}".format(core), verbose_level=2)
-        self.output("URL: {}".format(base_url + core[0]))
+        latest_version_key = sorted(versions.keys(), key=LooseVersion)[-1]
+        self.output(
+            "Latest version URL suffix: {}".format(versions[latest_version_key]), verbose_level=2
+        )
+        full_url = urljoin(base_url, versions[latest_version_key])
+        self.output("URL: {}".format(full_url), verbose_level=2)
         download_dir = os.path.join(self.env["RECIPE_CACHE_DIR"], "downloads")
         try:
             os.makedirs(download_dir)
@@ -98,7 +111,7 @@ class VMwareFusionURLProvider(URLGetter):
             # Directory already exists
             pass
         temp_file = os.path.join(download_dir, "metadata.xml.gz")
-        vLatest = self.download_to_file(base_url + core[0], temp_file)
+        vLatest = self.download_to_file(full_url, temp_file)
         try:
             with gzip.open(vLatest, "rb") as f:
                 data = f.read()
@@ -114,8 +127,8 @@ class VMwareFusionURLProvider(URLGetter):
             "bulletin/componentList/component/relativePath"
         )
         return (
-            base_url + core[0].replace("metadata.xml.gz", relativePath.text),
-            latest_version,
+            full_url.replace("metadata.xml.gz", relativePath.text),
+            latest_version_key,
         )
 
     def main(self):
