@@ -19,7 +19,7 @@
 		<!--<key>ARB_GROUP_NAME</key><string>arbitrary</string>-->
 	</dict>
 	<key>MinimumVersion</key>
-	<string>0.2.5</string>
+	<string>1.4.1</string>
 	<key>ParentRecipe</key>
 	<string>com.justinrummel.pkg.VMwareFusion</string>
 	<key>Process</key>

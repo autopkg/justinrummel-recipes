@@ -14,10 +14,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import urllib, urllib2, gzip
+from __future__ import absolute_import, print_function
 
-from xml.etree import ElementTree
+import gzip
 from StringIO import StringIO
+from xml.etree import ElementTree
+
+try:
+    from urllib.request import urlopen  # For Python 3
+    from urllib.error import URLError
+except ImportError:
+    from urllib2 import urlopen  # For Python 2
+    from urllib2 import URLError
 
 # variables
 base_url = 'https://softwareupdate.vmware.com/cds/vmw-desktop/'
@@ -25,21 +33,20 @@ fusion = 'fusion.xml'
 
 # functions
 def packages_metadata(base_url, fusion):
-    request = urllib2.Request(base_url+fusion)
-    print base_url
+    print(base_url)
 
     try:
-        vsus = urllib2.urlopen(request)
-    except URLError, e:
-        print e.reason
+        vsus = urlopen(base_url + fusion)
+    except URLError as e:
+        print(e.reason)
 
     data = vsus.read()
-    # print data
+    # print(data)
 
     try:
         metaList = ElementTree.fromstring(data)
     except ExpatData:
-        print "Unable to parse XML data from string"
+        print("Unable to parse XML data from string")
 
     versions = []
     for metadata in metaList:
@@ -48,7 +55,7 @@ def packages_metadata(base_url, fusion):
 
     versions.sort()
     latest = versions[-1]
-    # print latest
+    # print(latest)
 
     urls = []
     for metadata in metaList:
@@ -57,32 +64,30 @@ def packages_metadata(base_url, fusion):
 
     matching = [s for s in urls if latest in s]
     packages = [s for s in matching if "package" in s]
-    print packages[0]
+    print(packages[0])
 
     vsus.close()
 
-    request = urllib2.Request(base_url+packages[0])
-
     try:
-        vLatest = urllib2.urlopen(request)
-    except URLError, e:
-        print e.reason
+        vLatest = urlopen(base_url + packages[0])
+    except URLError as e:
+        print(e.reason)
 
     buf = StringIO( vLatest.read())
     f = gzip.GzipFile(fileobj=buf)
     data = f.read()
-    # print data
+    # print(data)
 
-    print base_url+packages[0].replace("metadata.xml.gz", "")
+    print(base_url+packages[0].replace("metadata.xml.gz", ""))
 
     try:
         metadataResponse = ElementTree.fromstring(data)
     except ExpatData:
-        print "Unable to parse XML data from string"
+        print("Unable to parse XML data from string")
 
     for elem in metadataResponse.findall('bulletin/componentList/component/relativePath'):
-        # print elem.text
-        # print packages[0].replace("metadata.xml.gz", elem.text)
-        print base_url+packages[0].replace("metadata.xml.gz", elem.text)
+        # print(elem.text)
+        # print(packages[0].replace("metadata.xml.gz", elem.text))
+        print(base_url+packages[0].replace("metadata.xml.gz", elem.text))
 
 packages_metadata(base_url, fusion)
