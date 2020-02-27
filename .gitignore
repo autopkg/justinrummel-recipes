@@ -3,3 +3,6 @@
 
 # Mac garbage
 .DS_Store
+
+# YAML files
+*.yaml

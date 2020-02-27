@@ -1,0 +1,10 @@
+<script>
+    <name>TeamViewer-preinstall.sh</name>
+    <category>Web Browsers and Internet Utilities</category>
+    <filename>TeamViewer-preinstall.sh</filename>
+    <info />
+    <notes />
+    <priority>Before</priority>
+    <parameters />
+    <os_requirements />
+</script>
