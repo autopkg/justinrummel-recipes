@@ -82,17 +82,20 @@ class VMwareFusionURLProvider(URLGetter):
 
         versions = {}
         for metadata in metaList:
-            version = metadata.find("version")
+            # The version elements are unreliable.  We will extract the version from the URL text instead
+            # version = metadata.find("version")
             url = metadata.find("url")
-            if major_version == "latest" or major_version == version.text.split(".")[0]:
-                # We actually want the URL, instead of the version itself
+            
+            match = build_re.search(url.text)
+            if match and match.groups():
+                version = match.group(1)
                 self.output(
-                    "Found version: {} with URL: {}".format(version.text, url.text),
+                    "Found version: {} with URL: {}".format(version, url.text),
                     verbose_level=4,
                 )
-                match = build_re.search(url.text)
-                if match.groups():
-                    versions[match.group(1)] = url.text
+            
+                if major_version == "latest" or major_version == version.split(".")[0]:
+                    versions[version] = url.text
         if not versions:
             raise ProcessorError(
                 "Could not find any versions for the "
