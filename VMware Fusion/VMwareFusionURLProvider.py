@@ -38,7 +38,7 @@ __all__ = ["VMwareFusionURLProvider"]
 # variables
 VMWARE_BASE_URL = "https://softwareupdate.vmware.com/cds/vmw-desktop/"
 FUSION = "fusion.xml"
-DEFAULT_MAJOR_VERSION = "11"
+DEFAULT_MAJOR_VERSION = "12"
 
 
 class VMwareFusionURLProvider(URLGetter):
