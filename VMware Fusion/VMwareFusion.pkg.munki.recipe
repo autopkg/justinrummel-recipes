@@ -52,7 +52,10 @@
 			<key>Processor</key>
 			<string>MunkiImporter</string>
 			<key>Arguments</key>
-			<dict/>
+			<dict>
+				<key>repo_subdirectory</key>
+				<string>%MUNKI_REPO_SUBDIR%</string>
+			</dict>
 		</dict>
 	</array>
 </dict>
