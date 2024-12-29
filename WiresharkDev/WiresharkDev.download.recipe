@@ -3,13 +3,20 @@
 <plist version="1.0">
 <dict>
     <key>Description</key>
-    <string>the Development release of Wireshark.</string>
+    <string>Downloads the latest automated development build of Wireshark. (For stable versions of Wireshark, see the Wireshark recipes in homebysix-recipes.)
+    
+Valid values for ARCH include:
+- "Intel" (default, Intel)
+- "Arm" (Apple Silicon)
+</string>
     <key>Identifier</key>
     <string>com.justinrummel.download.WiresharkDev</string>
     <key>Input</key>
     <dict>
         <key>NAME</key>
         <string>Wireshark</string>
+        <key>ARCH</key>
+        <string>Intel</string>
     </dict>
     <key>MinimumVersion</key>
     <string>0.4.0</string>
@@ -21,19 +28,9 @@
             <key>Arguments</key>
             <dict>
                 <key>url</key>
-                <string>https://www.wireshark.org/download.html</string>
-                <key>request_headers</key>
-                <dict>
-                    <key>User-Agent</key>
-                    <string>Safari 8.0.2</string>
-                </dict>
+                <string>https://www.wireshark.org/download/automated/osx/?C=M;O=D</string>
                 <key>re_pattern</key>
-                <string>((Wireshark)( |%20)(3)\.(\d{1,2})\.(\d{1,2})(|rc\d{1,2})( |%20)(Intel)( |%20)(64\.dmg))</string>
-                <key>re_flags</key>
-                <array>
-                    <string>MULTILINE</string>
-                    <string>DOTALL</string>
-                </array>
+                <string>href="(Wireshark%20[\d\.]+rc[0-9a-z\-]+%20%ARCH%%2064\.dmg)"</string>
                 <key>result_output_var_name</key>
                 <string>match</string>
             </dict>
@@ -44,14 +41,25 @@
             <key>Arguments</key>
             <dict>
                 <key>url</key>
-                <string>https://1.na.dl.wireshark.org/osx/%match%</string>
+                <string>https://www.wireshark.org/download/automated/osx/%match%</string>
                 <key>filename</key>
-                <string>%match%</string>
+                <string>%NAME%.dmg</string>
             </dict>
         </dict>
         <dict>
             <key>Processor</key>
             <string>EndOfCheckPhase</string>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>CodeSignatureVerifier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_path</key>
+                <string>%pathname%/Wireshark.app</string>
+                <key>requirement</key>
+                <string>identifier "org.wireshark.Wireshark" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "7Z6EMTD2C6"</string>
+            </dict>
         </dict>
     </array>
 </dict>
