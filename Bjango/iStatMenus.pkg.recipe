@@ -14,7 +14,7 @@
 	<key>MinimumVersion</key>
 	<string>0.2.5</string>
 	<key>ParentRecipe</key>
-	<string>com.justinrummel.download.iStatMenus</string>
+	<string>com.github.keeleysam.recipes.Bjango.iStatMenus.download</string>
 	<key>Process</key>
 	<array>
 		<dict>
