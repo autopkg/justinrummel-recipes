@@ -69,7 +69,7 @@
 					<key>version</key>
 					<string>%version%</string>
 					<key>id</key>
-					<string>ws.agile.1Password</string>
+					<string>com.bjango.istatmenus</string>
 					<key>options</key>
 					<string>purge_ds_store</string>
 					<key>chown</key>
